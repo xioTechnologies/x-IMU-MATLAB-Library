@@ -37,7 +37,7 @@ classdef EulerAnglesDataClass < TimeSeriesDataBaseClass
                 end
 
                 % Plot data
-                fig =  figure('Number', 'off', 'Name', 'EulerAngles');
+                fig =  figure('Name', 'EulerAngles');
                 hold on;
                 plot(time, obj.Phi, 'r');
                 plot(time, obj.Theta, 'g');

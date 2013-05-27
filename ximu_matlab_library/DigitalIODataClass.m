@@ -55,7 +55,7 @@ classdef DigitalIODataClass < TimeSeriesDataBaseClass
                 end
 
                 % Plot data
-                fig =  figure('Number', 'off', 'Name', 'DigitalIO');
+                fig =  figure('Name', 'DigitalIO');
                 hold on;
                 plot(time, obj.AX0.State, 'r');
                 plot(time, obj.AX1.State, 'g');

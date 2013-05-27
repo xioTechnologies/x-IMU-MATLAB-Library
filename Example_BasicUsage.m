@@ -1,14 +1,13 @@
-%% xIMUdataClass_ExampleUsage.m
-% MATLAB x-IMU Library Version 5.0
+%% Example_BasicUsage.m
 
-addpath('xIMUclasses');     % include class library
-close all;                  % close all figures
-clear;                      % clear all variables
-clc;                        % clear the command terminal
+addpath('ximu_matlab_library');	% include library
+close all;                      % close all figures
+clear;                          % clear all variables
+clc;                            % clear the command terminal
 
 %% Import and plot data
 
-xIMUdata = xIMUdataClass('exampleData\00000');
+xIMUdata = xIMUdataClass('ExampleData_BasicUsage\00000');
 xIMUdata.Plot();
 
 %% View properties of the objects by typing their name

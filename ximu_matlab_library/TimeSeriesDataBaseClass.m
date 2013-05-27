@@ -14,6 +14,7 @@ classdef TimeSeriesDataBaseClass < DataBaseClass
     %% Public properties
     properties (Access = public)
         SampleRate = 0;
+        StartTime = 0;
     end
 
     %% Abstract public methods
@@ -28,9 +29,13 @@ classdef TimeSeriesDataBaseClass < DataBaseClass
             if(obj.SampleRate == 0)
                 obj.Time = [];
             elseif(obj.NumPackets ~= 0)
-                obj.Time = (0:obj.NumPackets-1)' * (1/obj.SampleRate);
+                obj.Time = (0:obj.NumPackets-1)' * (1/obj.SampleRate) + obj.StartTime;
             end
         end
+        function obj = set.StartTime(obj, startTime)
+            obj.StartTime = startTime;
+            obj.SampleRate = obj.SampleRate;
+        end        
         function samplePeriod = get.SamplePeriod(obj)
             if(obj.SampleRate == 0)
                 samplePeriod = 0;

@@ -51,7 +51,7 @@ classdef BattThermDataBaseClass < TimeSeriesDataBaseClass
                 end
 
                 % Plot data
-                fig = figure('Number', 'off', 'Name', figName);
+                fig = figure('Name', figName);
                 ax(1) = subplot(2,1,1);
                 hold on;
                 plot(time, obj.Battery);

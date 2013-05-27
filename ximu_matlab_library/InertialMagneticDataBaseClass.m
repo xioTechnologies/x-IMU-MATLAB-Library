@@ -61,7 +61,7 @@ classdef InertialMagneticDataBaseClass < TimeSeriesDataBaseClass
                 end
 
                 % Plot data
-                fig = figure('Number', 'off', 'Name', figName);
+                fig = figure('Name', figName);
                 ax(1) = subplot(3,1,1);
                 hold on;
                 plot(time, obj.Gyroscope.X, 'r');
