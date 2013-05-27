@@ -8,17 +8,16 @@ classdef xIMUdataClass < handle
         FileNamePrefix = '';
         ConstructorImport = true;
 
-        % Data classes
-        DateTimeData = DateTimeDataClass();
-        RawBattThermData = RawBattThermDataClass();
-        CalBattThermData = CalBattThermDataClass();
-        RawInertialMagneticData = RawInertialMagneticDataClass();
-        CalInertialMagneticData = CalInertialMagneticDataClass();
-        QuaternionData = QuaternionDataClass();
-        RotationMatrixData = RotationMatrixDataClass();
-        EulerAnglesData = EulerAnglesDataClass();
-        DigitalIOData = DigitalIODataClass();
-
+        % Data objects
+        DateTimeData = [];
+        RawBattThermData = [];
+        CalBattThermData = [];
+        RawInertialMagneticData = [];
+        CalInertialMagneticData = [];
+        QuaternionData = [];
+        RotationMatrixData = [];
+        EulerAnglesData = [];
+        DigitalIOData = [];
     end
 
     %% Public methods
@@ -27,7 +26,20 @@ classdef xIMUdataClass < handle
 
         % Constructor
         function obj = xIMUdataClass(varargin)
-            obj.FileNamePrefix = varargin{1};
+            
+            % Create data objects
+            obj.DateTimeData = DateTimeDataClass();
+            obj.RawBattThermData = RawBattThermDataClass();
+            obj.CalBattThermData = CalBattThermDataClass();
+            obj.RawInertialMagneticData = RawInertialMagneticDataClass();
+            obj.CalInertialMagneticData = CalInertialMagneticDataClass();
+            obj.QuaternionData = QuaternionDataClass();
+            obj.RotationMatrixData = RotationMatrixDataClass();
+            obj.EulerAnglesData = EulerAnglesDataClass();
+            obj.DigitalIOData = DigitalIODataClass();
+            
+            % Apply constructor arguments
+            obj.FileNamePrefix = varargin{1};            
             for i = 2:2:nargin
                 if  strcmp(varargin{i}, 'PrintProgress'), obj.PrintProgress = varargin{i+1};
                 elseif  strcmp(varargin{i}, 'ConstructorImport'), obj.ConstructorImport = varargin{i+1};
@@ -45,6 +57,8 @@ classdef xIMUdataClass < handle
                 else error('Invalid argument.');
                 end
             end
+            
+            % Import data
             if(obj.ConstructorImport)
                 obj.Import();
             end
