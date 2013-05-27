@@ -1,37 +1,35 @@
-classdef EulerAnglesDataClass < DataBaseClass
+classdef EulerAnglesDataClass < TimeSeriesDataBaseClass
 
     %% Public 'read-only' properties
-
     properties (SetAccess = private)
+        FileNameAppendage = '_EulerAngles.csv';
         Phi = [];
         Theta = [];
         Psi = [];
     end
 
-    %% Public 'read-only' properties
-
-    properties (SetAccess = private)
-        FileNameAppendage = '_EulerAngles.csv';
-    end
-
     %% Public methods
-
     methods (Access = public)
-        function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
-            obj.Phi = data(:,1);
-            obj.Theta = data(:,2);
-            obj.Psi = data(:,3);
+        function obj = EulerAnglesDataClass(varargin)
+            fileNamePrefix = varargin{1};
+            for i = 2:2:nargin
+                if  strcmp(varargin{i}, 'SampleRate'), obj.SampleRate = varargin{i+1};
+                else error('Invalid argument.');
+                end
+            end
+            data = obj.ImportCSVnumeric(fileNamePrefix);
+            obj.Phi = data(:,2);
+            obj.Theta = data(:,3);
+            obj.Psi = data(:,4);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
         function fig = Plot(obj)
-            if(obj.NumSamples == 0)
+            if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                
                 % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
-                    time = 1:obj.NumSamples;
+                    time = 1:obj.NumPackets;
                     xLabel = 'Sample';
                 else
                     time = obj.Time;
@@ -46,13 +44,10 @@ classdef EulerAnglesDataClass < DataBaseClass
                 plot(time, obj.Psi, 'b');
                 title('Euler angles');
                 xlabel(xLabel);
-                ylabel('Angle (^\circ)');
+                ylabel('Angle (degrees)');
                 legend('\phi', '\theta', '\psi');
                 hold off;
             end
         end
     end
-
 end
-
-%% End of class

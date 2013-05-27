@@ -1,44 +1,33 @@
-classdef BattThermDataBaseClass < DataBaseClass
+classdef BattThermDataBaseClass < TimeSeriesDataBaseClass
+
+    %% Abstract public 'read-only' properties
+    properties (Abstract, SetAccess = private)
+        FileNameAppendage;
+    end
 
     %% Public 'read-only' properties
-
     properties (SetAccess = private)
         Battery = [];
         Thermometer = [];
     end
 
-    %% Abstract public 'read-only properties
-
-    properties (Abstract, SetAccess = private)
-        FileNameAppendage;
-    end
-
     %% Abstract public methods
-
     methods (Abstract, Access = public)
         Plot(obj);
     end
 
-    %% Public methods
-
-    methods (Access = public)
+    %% Protected methods
+    methods (Access = protected)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
-            obj.Battery = data(:,1);
-            obj.Thermometer = data(:,2);
+            data = obj.ImportCSVnumeric(fileNamePrefix);
+            obj.Battery = data(:,2);
+            obj.Thermometer = data(:,3);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-    end
-
-    %% Protected methods
-
-    methods (Access = protected)
         function fig = PlotRawOrCal(obj, RawOrCal)
-
-            if(obj.NumSamples == 0)
+            if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                
                 % Define text dependent on Raw or Cal
                 if(strcmp(RawOrCal, 'Raw'))
                     figName = 'RawBattTherm';
@@ -54,7 +43,7 @@ classdef BattThermDataBaseClass < DataBaseClass
 
                 % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
-                    time = 1:obj.NumSamples;
+                    time = 1:obj.NumPackets;
                     xLabel = 'Sample';
                 else
                     time = obj.Time;
@@ -81,7 +70,4 @@ classdef BattThermDataBaseClass < DataBaseClass
             end
         end
     end
-
 end
-
-%% End of class

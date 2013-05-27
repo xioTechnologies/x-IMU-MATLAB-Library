@@ -1,51 +1,41 @@
-classdef InertialMagneticDataBaseClass < DataBaseClass
+classdef InertialMagneticDataBaseClass < TimeSeriesDataBaseClass
+
+    %% Abstract public 'read-only' properties
+    properties (Abstract, SetAccess = private)
+        FileNameAppendage;
+    end
 
     %% Public 'read-only' properties
-
     properties (SetAccess = private)
         Gyroscope = struct('X', [], 'Y', [], 'Z', []);
         Accelerometer = struct('X', [], 'Y', [], 'Z', []);
         Magnetometer = struct('X', [], 'Y', [], 'Z', []);
     end
 
-    %% Abstract public 'read-only properties
-
-    properties (Abstract, SetAccess = private)
-        FileNameAppendage;
-    end
-
     %% Abstract public methods
-
     methods (Abstract, Access = public)
         Plot(obj);
     end
 
-    %% Public methods
-
-    methods (Access = public)
+    %% Protected methods
+    methods (Access = protected)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
-            obj.Gyroscope.X = data(:,1);
-            obj.Gyroscope.Y = data(:,2);
-            obj.Gyroscope.Z = data(:,3);
-            obj.Accelerometer.X = data(:,4);
-            obj.Accelerometer.Y = data(:,5);
-            obj.Accelerometer.Z = data(:,6);
-            obj.Magnetometer.X = data(:,7);
-            obj.Magnetometer.Y = data(:,8);
-            obj.Magnetometer.Z = data(:,9);
+            data = obj.ImportCSVnumeric(fileNamePrefix);
+            obj.Gyroscope.X = data(:,2);
+            obj.Gyroscope.Y = data(:,3);
+            obj.Gyroscope.Z = data(:,4);
+            obj.Accelerometer.X = data(:,5);
+            obj.Accelerometer.Y = data(:,6);
+            obj.Accelerometer.Z = data(:,7);
+            obj.Magnetometer.X = data(:,8);
+            obj.Magnetometer.Y = data(:,9);
+            obj.Magnetometer.Z = data(:,10);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-    end
-
-    %% Protected methods
-
-    methods (Access = protected)
         function fig = PlotRawOrCal(obj, RawOrCal)
-            if(obj.NumSamples == 0)
+            if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                
                 % Define text dependent on Raw or Cal
                 if(strcmp(RawOrCal, 'Raw'))
                     figName = 'RawInertialMagnetic';
@@ -63,7 +53,7 @@ classdef InertialMagneticDataBaseClass < DataBaseClass
 
                 % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
-                    time = 1:obj.NumSamples;
+                    time = 1:obj.NumPackets;
                     xLabel = 'Sample';
                 else
                     time = obj.Time;
@@ -106,7 +96,4 @@ classdef InertialMagneticDataBaseClass < DataBaseClass
             end
         end
     end
-
 end
-
-%% End of class

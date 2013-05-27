@@ -1,14 +1,11 @@
 classdef xIMUdataClass < handle
 
     %% Public properties
-
-    properties (Access = public)
-
-        % General properties
+    properties (SetAccess = private)
         FileNamePrefix = '';
-        ConstructorImport = true;
-
-        % Data objects
+        ErrorData = [];
+        CommandData = [];
+        RegisterData = [];
         DateTimeData = [];
         RawBattThermData = [];
         CalBattThermData = [];
@@ -21,82 +18,72 @@ classdef xIMUdataClass < handle
     end
 
     %% Public methods
-
     methods (Access = public)
-
-        % Constructor
         function obj = xIMUdataClass(varargin)
-            
-            % Create data objects
-            obj.DateTimeData = DateTimeDataClass();
-            obj.RawBattThermData = RawBattThermDataClass();
-            obj.CalBattThermData = CalBattThermDataClass();
-            obj.RawInertialMagneticData = RawInertialMagneticDataClass();
-            obj.CalInertialMagneticData = CalInertialMagneticDataClass();
-            obj.QuaternionData = QuaternionDataClass();
-            obj.RotationMatrixData = RotationMatrixDataClass();
-            obj.EulerAnglesData = EulerAnglesDataClass();
-            obj.DigitalIOData = DigitalIODataClass();
-            
-            % Apply constructor arguments
-            obj.FileNamePrefix = varargin{1};            
-            for i = 2:2:nargin
-                if  strcmp(varargin{i}, 'PrintProgress'), obj.PrintProgress = varargin{i+1};
-                elseif  strcmp(varargin{i}, 'ConstructorImport'), obj.ConstructorImport = varargin{i+1};
-                elseif  strcmp(varargin{i}, 'BattThermSampleRate')
-                    obj.RawBattThermData.SampleRate = varargin{i+1};
-                    obj.CalwBattThermData.SampleRate = varargin{i+1};
-                elseif  strcmp(varargin{i}, 'InertialMagneticSampleRate')
-                    obj.RawInertialMagneticData.SampleRate = varargin{i+1};
-                    obj.CalInertialMagneticData.SampleRate = varargin{i+1};
-                elseif  strcmp(varargin{i}, 'QuaternionSampleRate')
-                    obj.QuaternionData.SampleRate = varargin{i+1};
-                    obj.RotationMatrixData.SampleRate = varargin{i+1};
-                    obj.EulerAnglesData.SampleRate = varargin{i+1};
-                elseif  strcmp(varargin{i}, 'DigitalIOSampleRate'), obj.DigitalIOData.SampleRate = varargin{i+1};
-                else error('Invalid argument.');
+            % Create data objects from files
+            obj.FileNamePrefix = varargin{1};
+            dataImported = false;
+            try obj.ErrorData = ErrorDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CommandData = CommandDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RegisterData = RegisterDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.DateTimeData = DateTimeDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawBattThermData = RawBattThermDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalBattThermData = CalBattThermDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawInertialMagneticData = RawInertialMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalInertialMagneticData = CalInertialMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.QuaternionData = QuaternionDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.EulerAnglesData = EulerAnglesDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RotationMatrixData = RotationMatrixDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.DigitalIOData = DigitalIODataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            if(~dataImported)
+                error('No data was imported.');
+            end
+
+            % Apply SampleRate from regsiter data
+            try h = obj.RawBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(53)); catch e, end
+            try h = obj.CalBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(53)); catch e, end
+            try h = obj.RawInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(54)); catch e, end
+            try h = obj.CalInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(54)); catch e, end
+            try h = obj.QuaternionData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
+            try h = obj.RotationMatrixData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
+            try h = obj.EulerAnglesData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
+            try h = obj.DigitalIOData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(63)); catch e, end
+
+            % Appply SampleRate if sepecifed as argument
+            for i = 2:2:(nargin)
+                if strcmp(varargin{i}, 'BattThermSampleRate')
+                    try h = obj.RawBattThermData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalBattThermData; h.SampleRate = varargin{i+1}; catch e, end
+                elseif strcmp(varargin{i}, 'InertialMagneticSampleRate')
+                    try h = obj.RawInertialMagneticData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalInertialMagneticData; h.SampleRate = varargin{i+1}; catch e, end
+                elseif strcmp(varargin{i}, 'QuaternionSampleRate')
+                    try h = obj.QuaternionData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.RotationMatrixData.SampleRate; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.EulerAnglesData; h.SampleRate = varargin{i+1}; catch e, end
+                elseif strcmp(varargin{i}, 'DigitalIOSampleRate')
+                    try h = obj.DigitalIOData; h.SampleRate = varargin{i+1}; catch e, end
+                else
+                    error('Invalid argument.');
                 end
             end
-            
-            % Import data
-            if(obj.ConstructorImport)
-                obj.Import();
-            end
         end
-
-        % General methods
-        function obj = Import(obj)
-            fileName = strcat(obj.FileNamePrefix, obj.DateTimeData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.DateTimeData.Import(obj.FileNamePrefix); end           
-            fileName = strcat(obj.FileNamePrefix, obj.RawBattThermData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.RawBattThermData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.CalBattThermData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.CalBattThermData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.RawInertialMagneticData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.RawInertialMagneticData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.CalInertialMagneticData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.CalInertialMagneticData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.QuaternionData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.QuaternionData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.EulerAnglesData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.EulerAnglesData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.RotationMatrixData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.RotationMatrixData.Import(obj.FileNamePrefix); end
-            fileName = strcat(obj.FileNamePrefix, obj.DigitalIOData.FileNameAppendage);
-            if(exist(fileName, 'file')), obj.DigitalIOData.Import(obj.FileNamePrefix); end
-        end
-        function Plot(obj)
-            if(obj.RawBattThermData.NumSamples ~= 0), obj.RawBattThermData.Plot(); end
-            if(obj.CalBattThermData.NumSamples ~= 0), obj.CalBattThermData.Plot(); end
-            if(obj.RawInertialMagneticData.NumSamples ~= 0), obj.RawInertialMagneticData.Plot(); end
-            if(obj.CalInertialMagneticData.NumSamples ~= 0), obj.CalInertialMagneticData.Plot(); end
-            %if(obj.QuaternionData.NumSamples ~= 0), obj.QuaternionData.Plot(); end
-            %if(obj.RotationMatrixData.NumSamples ~= 0), obj.RotationMatrixData.Plot(); end
-            if(obj.EulerAnglesData.NumSamples ~= 0), obj.EulerAnglesData.Plot(); end
-            if(obj.DigitalIOData.NumSamples ~= 0), obj.DigitalIOData.Plot(); end
+        function obj = Plot(obj)
+            try obj.RawBattThermData.Plot(); catch e, end
+            try obj.CalBattThermData.Plot(); catch e, end
+            try obj.RawInertialMagneticData.Plot(); catch e, end
+            try obj.CalInertialMagneticData.Plot(); catch e, end
+            try obj.QuaternionData.Plot(); catch e, end
+            try obj.EulerAnglesData.Plot(); catch e, end
+            try obj.RotationMatrixDataClass.Plot(); catch e, end
+            try obj.DigitalIOData.Plot(); catch e, end
         end
     end
- 
+    
+    %% Private methods
+    methods (Access = private)
+        function sampleRate = SampleRateFromRegValue(obj, value)
+            sampleRate = floor(2^(value-1));
+        end
+    end
 end
-
-%% End of class
