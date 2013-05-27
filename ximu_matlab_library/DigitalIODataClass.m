@@ -39,17 +39,12 @@ classdef DigitalIOdataClass < TimeSeriesDataBaseClass
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig =  figure('Name', 'DigitalIO');
+                fig = figure('Name', obj.CreateFigName());
                 hold on;
                 plot(time, obj.State.AX0, 'r');
                 plot(time, obj.State.AX1, 'g');
@@ -60,7 +55,7 @@ classdef DigitalIOdataClass < TimeSeriesDataBaseClass
                 plot(time, obj.State.AX6, ':b');
                 plot(time, obj.State.AX7, ':k');
                 title('Digital I/O');
-                xlabel(xLabel);
+                xlabel(obj.TimeAxis);
                 ylabel('State (Binary)');
                 legend('AX0', 'AX1', 'AX2', 'AX3', 'AX4', 'AX5', 'AX6', 'AX7');
                 hold off;

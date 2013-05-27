@@ -27,23 +27,18 @@ classdef EulerAnglesDataClass < TimeSeriesDataBaseClass
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig =  figure('Name', 'EulerAngles');
+                fig = figure('Name', obj.CreateFigName());
                 hold on;
                 plot(time, obj.Phi, 'r');
                 plot(time, obj.Theta, 'g');
                 plot(time, obj.Psi, 'b');
                 title('Euler angles');
-                xlabel(xLabel);
+                xlabel(obj.TimeAxis);
                 ylabel('Angle (degrees)');
                 legend('\phi', '\theta', '\psi');
                 hold off;

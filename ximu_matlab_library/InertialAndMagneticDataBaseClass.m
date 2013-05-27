@@ -12,9 +12,11 @@ classdef InertialAndMagneticDataBaseClass < TimeSeriesDataBaseClass
         Magnetometer = struct('X', [], 'Y', [], 'Z', []);
     end
 
-    %% Abstract public methods
-    methods (Abstract, Access = public)
-        Plot(obj);
+    %% Abstract protected properties
+    properties (Access = protected)
+        GyroscopeUnits;
+        AccelerometerUnits;
+        MagnetometerUnits;
     end
 
     %% Protected methods
@@ -32,44 +34,28 @@ classdef InertialAndMagneticDataBaseClass < TimeSeriesDataBaseClass
             obj.Magnetometer.Z = data(:,10);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-        function fig = PlotRawOrCal(obj, RawOrCal)
+    end
+
+    %% Public methods
+    methods (Access = public)
+        function fig = Plot(obj)
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Define text dependent on Raw or Cal
-                if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawInertialAndMag';
-                    gyroscopeUnits = 'lsb';
-                    accelerometerUnits = 'lsb';
-                    magnetometerUnits = 'lsb';
-                elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalInertialAndMag';
-                    gyroscopeUnits = '^\circ/s';
-                    accelerometerUnits = 'g';
-                    magnetometerUnits = 'G';
-                else
-                    error('Invalid argument.');
-                end
-
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig = figure('Name', figName);
+                fig = figure('Name', obj.CreateFigName());
                 ax(1) = subplot(3,1,1);
                 hold on;
                 plot(time, obj.Gyroscope.X, 'r');
                 plot(time, obj.Gyroscope.Y, 'g');
                 plot(time, obj.Gyroscope.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Angular rate (', gyroscopeUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Angular rate (', obj.GyroscopeUnits, ')'));
                 title('Gyroscope');
                 hold off;
                 ax(2) = subplot(3,1,2);
@@ -78,8 +64,8 @@ classdef InertialAndMagneticDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.Accelerometer.Y, 'g');
                 plot(time, obj.Accelerometer.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Acceleration (', obj.AccelerometerUnits, ')'));
                 title('Accelerometer');
                 hold off;
                 ax(3) = subplot(3,1,3);
@@ -88,8 +74,8 @@ classdef InertialAndMagneticDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.Magnetometer.Y, 'g');
                 plot(time, obj.Magnetometer.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Flux (', magnetometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Flux (', obj.MagnetometerUnits, ')'));
                 title('Magnetometer');
                 hold off;
                 linkaxes(ax,'x');

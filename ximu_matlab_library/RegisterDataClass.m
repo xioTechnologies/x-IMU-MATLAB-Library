@@ -22,13 +22,13 @@ classdef RegisterDataClass < DataBaseClass
             value = obj.ValueAtIndexes(obj.IndexesOfAddress(address));
         end
         function floatValue = GetFloatValueAtAddress(obj, address)
-            floatValue = obj.ValueAtIndexes(obj.IndexesOfAddress(address));
+            floatValue = obj.FloatValueAtIndexes(obj.IndexesOfAddress(address));
         end
         function value = GetValueAtName(obj, name)
             value = obj.ValueAtIndexes(obj.IndexesOfName(name));
         end
         function floatValue = GetFloatValueAtName(obj, name)
-            floatValue = obj.ValueAtIndexes(obj.IndexesOfName(name));
+            floatValue = obj.FloatValueAtIndexes(obj.IndexesOfName(name));
         end
     end
 

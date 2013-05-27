@@ -15,9 +15,9 @@ classdef CalAnalogueInputDataClass < AnalogueInputDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Cal');
+
+            % Set protected parent class variables
+            obj.ADCunits = 'V';
         end
     end
 end

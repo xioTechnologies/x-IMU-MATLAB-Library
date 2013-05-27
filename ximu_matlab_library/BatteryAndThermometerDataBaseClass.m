@@ -11,9 +11,10 @@ classdef BatteryAndThermometerDataBaseClass < TimeSeriesDataBaseClass
         Thermometer = [];
     end
 
-    %% Abstract public methods
-    methods (Abstract, Access = public)
-        Plot(obj);
+    %% Abstract protected properties
+    properties (Access = protected)
+        ThermometerUnits;
+        BatteryUnits;
     end
 
     %% Protected methods
@@ -24,46 +25,32 @@ classdef BatteryAndThermometerDataBaseClass < TimeSeriesDataBaseClass
             obj.Thermometer = data(:,3);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-        function fig = PlotRawOrCal(obj, RawOrCal)
+    end
+
+    %% Public methods
+    methods (Access = public)
+        function fig = Plot(obj)
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Define text dependent on Raw or Cal
-                if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawBattAndTherm';
-                    batteryUnits = 'lsb';
-                    thermometerUnits = 'lsb';
-                elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalBattAndTherm';
-                    batteryUnits = 'V';
-                    thermometerUnits = '^\circC';
-                else
-                    error('Invalid argument.');
-                end
-
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig = figure('Name', figName);
+                fig = figure('Name', obj.CreateFigName());
                 ax(1) = subplot(2,1,1);
                 hold on;
                 plot(time, obj.Battery);
-                xlabel(xLabel);
-                ylabel(strcat('Voltage (', batteryUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Voltage (', obj.BatteryUnits, ')'));
                 title('Battery Voltmeter');
                 hold off;
                 ax(2) = subplot(2,1,2);
                 hold on;
                 plot(time, obj.Thermometer);
-                xlabel(xLabel);
-                ylabel(strcat('Temperature (', thermometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Temperature (', obj.ThermometerUnits, ')'));
                 title('Thermometer');
                 hold off;
                 linkaxes(ax,'x');

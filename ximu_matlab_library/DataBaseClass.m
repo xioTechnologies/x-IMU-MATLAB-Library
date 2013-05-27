@@ -26,6 +26,10 @@ classdef DataBaseClass < handle
             obj.PacketNumber = data{1};
             obj.NumPackets = length(obj.PacketNumber);
         end
+        function figName = CreateFigName(obj)
+            [pathstr, name , ext, versn] = fileparts(obj.FileNameAppendage);
+            figName = name(2:end);
+        end
     end
 
     %% Private methods

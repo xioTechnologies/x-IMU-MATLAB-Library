@@ -16,7 +16,7 @@ classdef DateTimeDataClass < TimeSeriesDataBaseClass
                 if  strcmp(varargin{i}, 'SampleRate'), obj.SampleRate = varargin{i+1};
                 else error('Invalid argument.');
                 end
-            end              
+            end
             data = obj.ImportCSVnumeric(fileNamePrefix);
             obj.Vector = data(:,2:7);
             obj.String = cellstr(datestr(obj.Vector));
@@ -25,6 +25,6 @@ classdef DateTimeDataClass < TimeSeriesDataBaseClass
         end
         function obj = Plot(obj)
             error('This method is unimplemented.');
-        end        
+        end
     end
 end

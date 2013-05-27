@@ -15,9 +15,9 @@ classdef RawADXL345busDataClass < ADXL345busDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Raw');
+
+            % Set protected parent class variables
+            obj.AccelerometerUnits = 'g';
         end
     end
 end

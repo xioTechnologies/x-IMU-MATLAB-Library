@@ -15,9 +15,10 @@ classdef CalBatteryAndThermometerDataClass < BatteryAndThermometerDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Cal');
+
+            % Set protected parent class variables
+            obj.ThermometerUnits = '^\circC';
+            obj.BatteryUnits = 'G';
         end
     end
 end

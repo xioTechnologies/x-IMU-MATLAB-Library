@@ -6,7 +6,7 @@ classdef PWMoutputDataClass < DataBaseClass
         AX0 = [];
         AX2 = [];
         AX4 = [];
-        AX6 = [];        
+        AX6 = [];
     end
 
     %% Public methods

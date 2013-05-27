@@ -13,9 +13,9 @@ classdef ADXL345busDataBaseClass < TimeSeriesDataBaseClass
         ADXL345D = struct('X', [], 'Y', [], 'Z', []);
     end
 
-    %% Abstract public methods
-    methods (Abstract, Access = public)
-        Plot(obj);
+    %% Abstract protected properties
+    properties (Access = protected)
+        AccelerometerUnits;
     end
 
     %% Protected methods
@@ -36,40 +36,28 @@ classdef ADXL345busDataBaseClass < TimeSeriesDataBaseClass
             obj.ADXL345D.Z = data(:,13);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-        function fig = PlotRawOrCal(obj, RawOrCal)
+    end
+
+    %% Public methods
+    methods (Access = public)
+        function fig = Plot(obj)
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Define text dependent on Raw or Cal
-                if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawADXL345bus';
-                    accelerometerUnits = 'lsb';
-                elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalADXL345bus';
-                    accelerometerUnits = 'g';
-                else
-                    error('Invalid argument.');
-                end
-
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig = figure('Name', figName);
+                fig = figure('Name', obj.CreateFigName());
                 ax(1) = subplot(4,1,1);
                 hold on;
                 plot(time, obj.ADXL345A.X, 'r');
                 plot(time, obj.ADXL345A.Y, 'g');
                 plot(time, obj.ADXL345A.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Acceleration (', obj.AccelerometerUnits, ')'));
                 title('ADXL345 A');
                 hold off;
                 ax(2) = subplot(4,1,2);
@@ -78,8 +66,8 @@ classdef ADXL345busDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.ADXL345B.Y, 'g');
                 plot(time, obj.ADXL345B.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Acceleration (', obj.AccelerometerUnits, ')'));
                 title('ADXL345 B');
                 hold off;
                 ax(3) = subplot(4,1,3);
@@ -88,8 +76,8 @@ classdef ADXL345busDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.ADXL345C.Y, 'g');
                 plot(time, obj.ADXL345C.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Acceleration (', obj.AccelerometerUnits, ')'));
                 title('ADXL345 C');
                 hold off;
                 ax(4) = subplot(4,1,4);
@@ -98,8 +86,8 @@ classdef ADXL345busDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.ADXL345D.Y, 'g');
                 plot(time, obj.ADXL345D.Z, 'b');
                 legend('X', 'Y', 'Z');
-                xlabel(xLabel);
-                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Acceleration (', obj.AccelerometerUnits, ')'));
                 title('ADXL345 D');
                 hold off;
                 linkaxes(ax,'x');

@@ -15,9 +15,11 @@ classdef RawInertialAndMagneticDataClass < InertialAndMagneticDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Raw');
+
+            % Set protected parent class variables
+            obj.GyroscopeUnits = 'lsb';
+            obj.AccelerometerUnits = 'lsb';
+            obj.MagnetometerUnits = 'lsb';
         end
     end
 end

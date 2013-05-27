@@ -1,4 +1,30 @@
-function xIMUdata = SyncroniseData(varargin)
+function SyncroniseData(varargin)
+%SYNCRONISEDATA Syncronises time series data between xIMUdataClass objects
+%
+%   SyncroniseData(xIMUdataStruct, StartEventTimes)
+%   SyncroniseData(xIMUdataStruct, StartEventTimes, EndEventTimes)
+%   SyncroniseData(xIMUdataStruct, 'UseAX0fallingEdge')
+%
+%   This fuction syncronises time series data between xIMUdataClass objects
+%   by adjusting the StartTime and SampleRate properties of each data
+%   class.
+%
+%   StartEventTimes is vector of values representing the time at which a
+%   'start synchronisation event' common to all xIMUdataClass objects is
+%   known to occur within each xIMUdataClass object's time series data. The
+%   length of this vector must equal the number of xIMUdataClass objects
+%   in xIMUdataStruct.
+%
+%   EndEventTimes is vector of values representing the time at which a
+%   'end synchronisation event' common to all xIMUdataClass objects is
+%   known to occur within each xIMUdataClass object's time series data. The
+%   length of this vector must equal the number of xIMUdataClass objects
+%   in xIMUdataStruct.
+%
+%   'UseAX0fallingEdge' should be specified if a falling edge of the
+%   auxilary port (configured in digital I/O mode) channel AX0 represents
+%   the 'start synchronisation event' or 'start synchronisation event' and
+%   'end synchronisation event'.
 
     %% Apply arguments
     xIMUdata = varargin{1};
@@ -6,14 +32,17 @@ function xIMUdata = SyncroniseData(varargin)
     StartEventTimes = [];
     EndEventTimes = [];
     UseAX0fallingEdge = false;
-    for i = 2:2:(nargin)
-        if strcmp(varargin{i}, 'StartEventTimes'), StartEventTimes = varargin{i+1};
-        elseif strcmp(varargin{i}, 'EndEventTimes'), EndEventTimes = varargin{i+1};
-        elseif strcmp(varargin{i}, 'UseAX0fallingEdge'), UseAX0fallingEdge = varargin{i+1};
+    if(ischar(varargin{2}))
+        if strcmp(varargin{2}, 'UseAX0fallingEdge'), UseAX0fallingEdge = true;
         else error('Invalid argument.');
         end
+    else
+        StartEventTimes = varargin{2};
+        if(nargin == 3)
+            EndEventTimes = varargin{3};
+        end
     end
-    
+
     %% Use AX0 falling edge of auxiliary port in Digital I/O mode
     if(UseAX0fallingEdge)
         for i = 1:numel(xIMUdataObjs)
@@ -23,8 +52,8 @@ function xIMUdata = SyncroniseData(varargin)
             if(numel(fallingEdgeTimes) > 1)
                 EndEventTimes = [EndEventTimes; fallingEdgeTimes(end)];
             end
-        end 
-    end  
+        end
+    end
 
     %% Modify start times to synchronise start of window
     if(numel(StartEventTimes) ~= numel(xIMUdataObjs))
@@ -41,7 +70,7 @@ function xIMUdata = SyncroniseData(varargin)
         try h = xIMUdataObjs{i}.EulerAnglesData; h.StartTime = -StartEventTimes(i); catch e, end
         try h = xIMUdataObjs{i}.DigitalIOdata; h.StartTime = -StartEventTimes(i); catch e, end
         try h = xIMUdataObjs{i}.RawAnalogueInputData; h.StartTime = -StartEventTimes(i); catch e, end
-        try h = xIMUdataObjs{i}.CalAnalogueInputData; h.StartTime = -StartEventTimes(i); catch e, end        
+        try h = xIMUdataObjs{i}.CalAnalogueInputData; h.StartTime = -StartEventTimes(i); catch e, end
         try h = xIMUdataObjs{i}.RawADXL345busData; h.StartTime = -StartEventTimes(i); catch e, end
         try h = xIMUdataObjs{i}.CalADXL345busData; h.StartTime = -StartEventTimes(i); catch e, end
     end
@@ -67,6 +96,6 @@ function xIMUdata = SyncroniseData(varargin)
         try h = xIMUdataObjs{i}.RawAnalogueInputData; h.SampleRate = scalers(i)*h.SampleRate; h.StartTime = StartEventTimes(i)/scalers(i); catch e, end
         try h = xIMUdataObjs{i}.CalAnalogueInputData; h.SampleRate = scalers(i)*h.SampleRate; h.StartTime = StartEventTimes(i)/scalers(i); catch e, end
         try h = xIMUdataObjs{i}.RawADXL345busData; h.SampleRate = scalers(i)*h.SampleRate; h.StartTime = StartEventTimes(i)/scalers(i); catch e, end
-        try h = xIMUdataObjs{i}.CalADXL345busData; h.SampleRate = scalers(i)*h.SampleRate; h.StartTime = StartEventTimes(i)/scalers(i); catch e, end        
+        try h = xIMUdataObjs{i}.CalADXL345busData; h.SampleRate = scalers(i)*h.SampleRate; h.StartTime = StartEventTimes(i)/scalers(i); catch e, end
     end
 end

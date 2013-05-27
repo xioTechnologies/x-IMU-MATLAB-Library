@@ -1,4 +1,10 @@
-%% ExampleScript.m
+% ExampleScript.m
+%
+% This script demonstrates basic usage of the x-IMU MATLAB Library showing
+% how data can be easily imported visualised and the library class
+% structures are used to organise and access data.
+
+%% Start of script
  
 addpath('ximu_matlab_library');     % include library
 close all;                          % close all figures
@@ -30,14 +36,14 @@ disp(sprintf('Earth''s magnetic field strength: %f G', mean(sqrt(mx.^2 + my.^2 +
  
 %% Example calculation using data: Remove gravity from accelerometer data
  
-indxSel = mod(1:length(xIMUdata.CalInertialAndMagneticData.Time), 2);               % other index selected; e.g. [1 0 1 0 1 0 1 0 1 ...]
+indxSel = mod(1:length(xIMUdata.CalInertialAndMagneticData.Time), 2);           % other index selected; e.g. [1 0 1 0 1 0 1 0 1 ...]
 accMtr = [xIMUdata.CalInertialAndMagneticData.Accelerometer.X(indxSel == 1), ...
           xIMUdata.CalInertialAndMagneticData.Accelerometer.Y(indxSel == 1), ...
-          xIMUdata.CalInertialAndMagneticData.Accelerometer.Z(indxSel == 1)];       % accelerometer data reduced from 256 Hz to 128 Hz (equal to rotation matrix data)
+          xIMUdata.CalInertialAndMagneticData.Accelerometer.Z(indxSel == 1)];	% accelerometer data reduced from 256 Hz to 128 Hz (equal to rotation matrix data)
 linAcc = zeros(length(accMtr), 3);
 for i = 1:length(accMtr)
-    transRot = xIMUdata.RotationMatrixData.RotationMatrix(:,:,i)';                  % transpose of matrix describes Earth relative to sensor frame
-    linAcc(i,:) = accMtr(i,:) - transRot(:,3)';                                     % 3rd column of rotation matrix describes Earth z-axis (gravity) in sensor frame
+    transRot = xIMUdata.RotationMatrixData.RotationMatrix(:,:,i)';	% transpose of matrix describes Earth relative to sensor frame
+    linAcc(i,:) = accMtr(i,:) - transRot(:,3)';                     % 3rd column of rotation matrix describes Earth z-axis (gravity) in sensor frame
 end
 figure('Name', 'Linear Acceleration');
 hold on;

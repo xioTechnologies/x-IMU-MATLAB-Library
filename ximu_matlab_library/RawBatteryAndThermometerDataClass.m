@@ -15,9 +15,10 @@ classdef RawBatteryAndThermometerDataClass < BatteryAndThermometerDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Raw');
+
+            % Set protected parent class variables
+            obj.ThermometerUnits = 'lsb';
+            obj.BatteryUnits = 'lsb';
         end
     end
 end

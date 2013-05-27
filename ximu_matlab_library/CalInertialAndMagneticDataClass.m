@@ -15,9 +15,11 @@ classdef CalInertialAndMagneticDataClass < InertialAndMagneticDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Cal');
+
+            % Set protected parent class variables
+            obj.GyroscopeUnits = '^\circ/s';
+            obj.AccelerometerUnits = 'g';
+            obj.MagnetometerUnits = 'G';
         end
     end
 end

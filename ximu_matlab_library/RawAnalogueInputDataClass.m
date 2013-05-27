@@ -15,9 +15,9 @@ classdef RawAnalogueInputDataClass < AnalogueInputDataBaseClass
                 end
             end
             obj.Import(fileNamePrefix);
-        end
-        function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Raw');
+
+            % Set protected parent class variables
+            obj.ADCunits = 'lsb';
         end
     end
 end

@@ -17,7 +17,7 @@ classdef xIMUdataClass < handle
         DigitalIOdata = [];
         RawAnalogueInputData = [];
         CalAnalogueInputData = [];
-        PWMoutputData = [];        
+        PWMoutputData = [];
         RawADXL345busData = [];
         CalADXL345busData = [];
     end
@@ -61,15 +61,14 @@ classdef xIMUdataClass < handle
             try h = obj.DigitalIOdata; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(78)); catch e, end
             try h = obj.RawAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
             try h = obj.CalAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
-            try h = obj.PWMoutputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(83)); catch e, end
             try h = obj.RawADXL345busData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(85)); catch e, end
             try h = obj.CalADXL345busData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(85)); catch e, end
 
             % Apply SampleRate if specified as argument
             for i = 2:2:(nargin)
                 if strcmp(varargin{i}, 'DateTimeSampleRate')
-                    try h = obj.DateTimeData; h.SampleRate = varargin{i+1}; catch e, end                
-                    elseif strcmp(varargin{i}, 'BattThermSampleRate')
+                    try h = obj.DateTimeData; h.SampleRate = varargin{i+1}; catch e, end
+                elseif strcmp(varargin{i}, 'BattThermSampleRate')
                     try h = obj.RawBatteryAndThermometerData; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.CalBatteryAndThermometerData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'InertialMagneticSampleRate')
@@ -83,7 +82,7 @@ classdef xIMUdataClass < handle
                     try h = obj.DigitalIOdata; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'AnalogueInputSampleRate')
                     try h = obj.RawAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end
-                    try h = obj.CalAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end                    
+                    try h = obj.CalAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'ADXL345SampleRate')
                     try h = obj.RawADXL345busData; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.CalADXL345busData; h.SampleRate = varargin{i+1}; catch e, end
@@ -102,7 +101,7 @@ classdef xIMUdataClass < handle
             try obj.RotationMatrixDataClass.Plot(); catch e, end
             try obj.DigitalIOdata.Plot(); catch e, end
             try obj.RawAnalogueInputData.Plot(); catch e, end
-            try obj.CalAnalogueInputData.Plot(); catch e, end            
+            try obj.CalAnalogueInputData.Plot(); catch e, end
             try obj.RawADXL345busData.Plot(); catch e, end
             try obj.CalADXL345busData.Plot(); catch e, end
         end

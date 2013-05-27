@@ -17,9 +17,9 @@ classdef AnalogueInputDataBaseClass < TimeSeriesDataBaseClass
         AX7 = [];
     end
 
-    %% Abstract public methods
-    methods (Abstract, Access = public)
-        Plot(obj);
+    %% Abstract protected properties
+    properties (Access = protected)
+        ADCunits;
     end
 
     %% Protected methods
@@ -36,32 +36,20 @@ classdef AnalogueInputDataBaseClass < TimeSeriesDataBaseClass
             obj.AX7 = data(:,9);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
-        function fig = PlotRawOrCal(obj, RawOrCal)
+    end
+
+    %% Public methods
+    methods (Access = public)
+        function fig = Plot(obj)
             if(obj.NumPackets == 0)
                 error('No data to plot.');
             else
-                % Define text dependent on Raw or Cal
-                if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawAnalogueInput';
-                    ADCunits = 'lsb';
-                elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalAnalogueInput';
-                    ADCunits = 'V';
-                else
-                    error('Invalid argument.');
-                end
-
-                % Create time vector and units if SampleRate known
                 if(isempty(obj.Time))
                     time = 1:obj.NumPackets;
-                    xLabel = 'Sample';
                 else
                     time = obj.Time;
-                    xLabel = 'Time (s)';
                 end
-
-                % Plot data
-                fig = figure('Name', figName);
+                fig = figure('Name', obj.CreateFigName());
                 hold on;
                 plot(time, obj.AX0, 'r');
                 plot(time, obj.AX1, 'g');
@@ -71,8 +59,8 @@ classdef AnalogueInputDataBaseClass < TimeSeriesDataBaseClass
                 plot(time, obj.AX5, ':g');
                 plot(time, obj.AX6, ':b');
                 plot(time, obj.AX7, ':k');
-                xlabel(xLabel);
-                ylabel(strcat('Voltage (', ADCunits, ')'));
+                xlabel(obj.TimeAxis);
+                ylabel(strcat('Voltage (', obj.ADCunits, ')'));
                 title('Analogue Input');
                 hold off;
             end
