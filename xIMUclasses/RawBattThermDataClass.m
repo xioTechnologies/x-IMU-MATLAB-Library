@@ -16,11 +16,11 @@ classdef RawBattThermDataClass < BattThermDataBaseClass
                 end
             end
         end
-        function obj = Plot(obj)
+        function fig = Plot(obj)
             if(obj.NumSamples == 0)
                 error('No data to plot.');
             else
-                obj.PlotRawOrCal('Raw');
+                fig = obj.PlotRawOrCal('Raw');
             end
         end
     end

@@ -42,64 +42,68 @@ classdef InertialMagneticDataBaseClass < DataBaseClass
 
     methods (Access = protected)
         function fig = PlotRawOrCal(obj, RawOrCal)
-
-            % Define text dependent on Raw or Cal
-            if(strcmp(RawOrCal, 'Raw'))
-                figName = 'RawInertialMagnetic';
-                gyroscopeUnits = 'lsb';
-                accelerometerUnits = 'lsb';
-                magnetometerUnits = 'lsb';
-            elseif(strcmp(RawOrCal, 'Cal'))
-                figName = 'CalInertialMagnetic';
-                gyroscopeUnits = '^\circ/s';
-                accelerometerUnits = 'g';
-                magnetometerUnits = 'G';
+            if(obj.NumSamples == 0)
+                error('No data to plot.');
             else
-                error('Invalid argument.');
-            end
+                
+                % Define text dependent on Raw or Cal
+                if(strcmp(RawOrCal, 'Raw'))
+                    figName = 'RawInertialMagnetic';
+                    gyroscopeUnits = 'lsb';
+                    accelerometerUnits = 'lsb';
+                    magnetometerUnits = 'lsb';
+                elseif(strcmp(RawOrCal, 'Cal'))
+                    figName = 'CalInertialMagnetic';
+                    gyroscopeUnits = '^\circ/s';
+                    accelerometerUnits = 'g';
+                    magnetometerUnits = 'G';
+                else
+                    error('Invalid argument.');
+                end
 
-            % Create time vector and units if SampleRate known
-            if(isempty(obj.Time))
-                time = 1:obj.NumSamples;
-                xLabel = 'Sample';
-            else
-                time = obj.Time;
-                xLabel = 'Time (s)';
-            end
+                % Create time vector and units if SampleRate known
+                if(isempty(obj.Time))
+                    time = 1:obj.NumSamples;
+                    xLabel = 'Sample';
+                else
+                    time = obj.Time;
+                    xLabel = 'Time (s)';
+                end
 
-            % Plot data
-            fig = figure('Number', 'off', 'Name', figName);
-            ax(1) = subplot(3,1,1);
-            hold on;
-            plot(time, obj.Gyroscope.X, 'r');
-            plot(time, obj.Gyroscope.Y, 'g');
-            plot(time, obj.Gyroscope.Z, 'b');
-            legend('X', 'Y', 'Z');
-            xlabel(xLabel);
-            ylabel(strcat('Angular rate (', gyroscopeUnits, ')'));
-            title('Gyroscope');
-            hold off;
-            ax(2) = subplot(3,1,2);
-            hold on;
-            plot(time, obj.Accelerometer.X, 'r');
-            plot(time, obj.Accelerometer.Y, 'g');
-            plot(time, obj.Accelerometer.Z, 'b');
-            legend('X', 'Y', 'Z');
-            xlabel(xLabel);
-            ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
-            title('Accelerometer');
-            hold off;
-            ax(3) = subplot(3,1,3);
-            hold on;
-            plot(time, obj.Magnetometer.X, 'r');
-            plot(time, obj.Magnetometer.Y, 'g');
-            plot(time, obj.Magnetometer.Z, 'b');
-            legend('X', 'Y', 'Z');
-            xlabel(xLabel);
-            ylabel(strcat('Flux (', magnetometerUnits, ')'));
-            title('Magnetometer');
-            hold off;
-            linkaxes(ax,'x');
+                % Plot data
+                fig = figure('Number', 'off', 'Name', figName);
+                ax(1) = subplot(3,1,1);
+                hold on;
+                plot(time, obj.Gyroscope.X, 'r');
+                plot(time, obj.Gyroscope.Y, 'g');
+                plot(time, obj.Gyroscope.Z, 'b');
+                legend('X', 'Y', 'Z');
+                xlabel(xLabel);
+                ylabel(strcat('Angular rate (', gyroscopeUnits, ')'));
+                title('Gyroscope');
+                hold off;
+                ax(2) = subplot(3,1,2);
+                hold on;
+                plot(time, obj.Accelerometer.X, 'r');
+                plot(time, obj.Accelerometer.Y, 'g');
+                plot(time, obj.Accelerometer.Z, 'b');
+                legend('X', 'Y', 'Z');
+                xlabel(xLabel);
+                ylabel(strcat('Acceleration (', accelerometerUnits, ')'));
+                title('Accelerometer');
+                hold off;
+                ax(3) = subplot(3,1,3);
+                hold on;
+                plot(time, obj.Magnetometer.X, 'r');
+                plot(time, obj.Magnetometer.Y, 'g');
+                plot(time, obj.Magnetometer.Z, 'b');
+                legend('X', 'Y', 'Z');
+                xlabel(xLabel);
+                ylabel(strcat('Flux (', magnetometerUnits, ')'));
+                title('Magnetometer');
+                hold off;
+                linkaxes(ax,'x');
+            end
         end
     end
 

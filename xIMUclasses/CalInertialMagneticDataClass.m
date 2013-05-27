@@ -16,11 +16,11 @@ classdef CalInertialMagneticDataClass < InertialMagneticDataBaseClass
                 end
             end
         end
-        function obj = Plot(obj)
+        function fig = Plot(obj)
             if(obj.NumSamples == 0)
                 error('No data to plot.');
             else
-                obj.PlotRawOrCal('Cal');
+                fig = obj.PlotRawOrCal('Cal');
             end
         end
     end

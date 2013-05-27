@@ -25,27 +25,31 @@ classdef EulerAnglesDataClass < DataBaseClass
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end
         function fig = Plot(obj)
-
-            % Create time vector and units if SampleRate known
-            if(isempty(obj.Time))
-                time = 1:obj.NumSamples;
-                xLabel = 'Sample';
+            if(obj.NumSamples == 0)
+                error('No data to plot.');
             else
-                time = obj.Time;
-                xLabel = 'Time (s)';
-            end
+                
+                % Create time vector and units if SampleRate known
+                if(isempty(obj.Time))
+                    time = 1:obj.NumSamples;
+                    xLabel = 'Sample';
+                else
+                    time = obj.Time;
+                    xLabel = 'Time (s)';
+                end
 
-            % Plot data
-            fig =  figure('Number', 'off', 'Name', 'EulerAngles');
-            hold on;
-            plot(time, obj.Phi, 'r');
-            plot(time, obj.Theta, 'g');
-            plot(time, obj.Psi, 'b');
-            title('Euler angles');
-            xlabel(xLabel);
-            ylabel('Angle (^\circ)');
-            legend('\phi', '\theta', '\psi');
-            hold off;
+                % Plot data
+                fig =  figure('Number', 'off', 'Name', 'EulerAngles');
+                hold on;
+                plot(time, obj.Phi, 'r');
+                plot(time, obj.Theta, 'g');
+                plot(time, obj.Psi, 'b');
+                title('Euler angles');
+                xlabel(xLabel);
+                ylabel('Angle (^\circ)');
+                legend('\phi', '\theta', '\psi');
+                hold off;
+            end
         end
     end
 
