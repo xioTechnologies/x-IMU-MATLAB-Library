@@ -29,12 +29,12 @@ xIMUdataStruct = ImportDirectory('ExampleData_DataSyncronisation')
 %% Manually synchronise data
 
 % Inspect unsynchronised plots for values of startTimes and endTimes
-xIMUdataStruct.ID_2D49.CalInertialMagneticData.Plot();
-xIMUdataStruct.ID_B460.CalInertialMagneticData.Plot();
+xIMUdataStruct.ID_42EE.CalInertialMagneticData.Plot();
+xIMUdataStruct.ID_42EF.CalInertialMagneticData.Plot();
 
 % Specify event times and synchronise data
-startTimes = [3.137 8.977];                 % observed times first tap prior to synchronisation
-endTimes = [28.95 34.79];                   % observed times last tap prior to synchronisation (not necessary here)
+startTimes = [3.227 8.949];                 % observed times first tap prior to synchronisation
+endTimes = [24.08 29.8];                   % observed times last tap prior to synchronisation (not necessary here)
 xIMUdataStruct = SyncroniseData(xIMUdataStruct, 'StartEvent', startTimes, 'EndEvent', endTimes);
  
 %% Plot synchronised data
@@ -42,23 +42,23 @@ xIMUdataStruct = SyncroniseData(xIMUdataStruct, 'StartEvent', startTimes, 'EndEv
 figure('Name', 'Synchronised Accelerometer Data');
 ax(1) = subplot(2,1,1);
 hold on;
-plot(xIMUdataStruct.ID_2D49.CalInertialMagneticData.Time, xIMUdataStruct.ID_2D49.CalInertialMagneticData.Accelerometer.X, 'r');
-plot(xIMUdataStruct.ID_2D49.CalInertialMagneticData.Time, xIMUdataStruct.ID_2D49.CalInertialMagneticData.Accelerometer.Y, 'g');
-plot(xIMUdataStruct.ID_2D49.CalInertialMagneticData.Time, xIMUdataStruct.ID_2D49.CalInertialMagneticData.Accelerometer.Z, 'b');
+plot(xIMUdataStruct.ID_42EE.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EE.CalInertialMagneticData.Accelerometer.X, 'r');
+plot(xIMUdataStruct.ID_42EE.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EE.CalInertialMagneticData.Accelerometer.Y, 'g');
+plot(xIMUdataStruct.ID_42EE.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EE.CalInertialMagneticData.Accelerometer.Z, 'b');
 legend('X', 'Y', 'Z');
 xlabel('TIme (s)');
 ylabel(strcat('Acceleration (g)'));
-title('x-IMU 2D49 - Accelerometer');
+title('x-IMU 42EE - Accelerometer');
 hold off;
 ax(2) = subplot(2,1,2);
 hold on;
-plot(xIMUdataStruct.ID_B460.CalInertialMagneticData.Time, xIMUdataStruct.ID_B460.CalInertialMagneticData.Accelerometer.X, 'r');
-plot(xIMUdataStruct.ID_B460.CalInertialMagneticData.Time, xIMUdataStruct.ID_B460.CalInertialMagneticData.Accelerometer.Y, 'g');
-plot(xIMUdataStruct.ID_B460.CalInertialMagneticData.Time, xIMUdataStruct.ID_B460.CalInertialMagneticData.Accelerometer.Z, 'b');
+plot(xIMUdataStruct.ID_42EF.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EF.CalInertialMagneticData.Accelerometer.X, 'r');
+plot(xIMUdataStruct.ID_42EF.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EF.CalInertialMagneticData.Accelerometer.Y, 'g');
+plot(xIMUdataStruct.ID_42EF.CalInertialMagneticData.Time, xIMUdataStruct.ID_42EF.CalInertialMagneticData.Accelerometer.Z, 'b');
 legend('X', 'Y', 'Z');
 xlabel('Time (s)');
 ylabel(strcat('Acceleration (g)'));
-title('x-IMU B460 - Accelerometer');
+title('x-IMU 42EF - Accelerometer');
 hold off;
 linkaxes(ax,'x');
  
