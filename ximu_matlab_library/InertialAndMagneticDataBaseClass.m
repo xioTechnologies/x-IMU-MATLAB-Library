@@ -1,4 +1,4 @@
-classdef InertialMagneticDataBaseClass < TimeSeriesDataBaseClass
+classdef InertialAndMagneticDataBaseClass < TimeSeriesDataBaseClass
 
     %% Abstract public 'read-only' properties
     properties (Abstract, SetAccess = private)
@@ -38,12 +38,12 @@ classdef InertialMagneticDataBaseClass < TimeSeriesDataBaseClass
             else
                 % Define text dependent on Raw or Cal
                 if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawInertialMagnetic';
+                    figName = 'RawInertialAndMag';
                     gyroscopeUnits = 'lsb';
                     accelerometerUnits = 'lsb';
                     magnetometerUnits = 'lsb';
                 elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalInertialMagnetic';
+                    figName = 'CalInertialAndMag';
                     gyroscopeUnits = '^\circ/s';
                     accelerometerUnits = 'g';
                     magnetometerUnits = 'G';

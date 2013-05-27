@@ -1,13 +1,13 @@
-classdef CalInertialMagneticDataClass < InertialMagneticDataBaseClass
+classdef RawBatteryAndThermometerDataClass < BatteryAndThermometerDataBaseClass
 
     %% Public 'read-only' properties
     properties (SetAccess = private)
-        FileNameAppendage = '_CalInertialMagnetic.csv';
+        FileNameAppendage = '_RawBattAndTherm.csv';
     end
 
     %% Public methods
     methods (Access = public)
-        function obj = CalInertialMagneticDataClass(varargin)
+        function obj = RawBatteryAndThermometerDataClass(varargin)
             fileNamePrefix = varargin{1};
             for i = 2:2:nargin
                 if  strcmp(varargin{i}, 'SampleRate'), obj.SampleRate = varargin{i+1};
@@ -17,7 +17,7 @@ classdef CalInertialMagneticDataClass < InertialMagneticDataBaseClass
             obj.Import(fileNamePrefix);
         end
         function fig = Plot(obj)
-            fig = obj.PlotRawOrCal('Cal');
+            fig = obj.PlotRawOrCal('Raw');
         end
     end
 end

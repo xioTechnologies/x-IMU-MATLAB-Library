@@ -1,4 +1,4 @@
-classdef BattThermDataBaseClass < TimeSeriesDataBaseClass
+classdef BatteryAndThermometerDataBaseClass < TimeSeriesDataBaseClass
 
     %% Abstract public 'read-only' properties
     properties (Abstract, SetAccess = private)
@@ -30,11 +30,11 @@ classdef BattThermDataBaseClass < TimeSeriesDataBaseClass
             else
                 % Define text dependent on Raw or Cal
                 if(strcmp(RawOrCal, 'Raw'))
-                    figName = 'RawBattTherm';
+                    figName = 'RawBattAndTherm';
                     batteryUnits = 'lsb';
                     thermometerUnits = 'lsb';
                 elseif(strcmp(RawOrCal, 'Cal'))
-                    figName = 'CalBattTherm';
+                    figName = 'CalBattAndTherm';
                     batteryUnits = 'V';
                     thermometerUnits = '^\circC';
                 else

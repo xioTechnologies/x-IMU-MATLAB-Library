@@ -1,13 +1,13 @@
-classdef RawBattThermDataClass < BattThermDataBaseClass
+classdef RawInertialAndMagneticDataClass < InertialAndMagneticDataBaseClass
 
     %% Public 'read-only' properties
     properties (SetAccess = private)
-        FileNameAppendage = '_RawBattTherm.csv';
+        FileNameAppendage = '_RawInertialAndMag.csv';
     end
 
     %% Public methods
     methods (Access = public)
-        function obj = RawBattThermDataClass(varargin)
+        function obj = RawInertialAndMagneticDataClass(varargin)
             fileNamePrefix = varargin{1};
             for i = 2:2:nargin
                 if  strcmp(varargin{i}, 'SampleRate'), obj.SampleRate = varargin{i+1};

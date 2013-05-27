@@ -7,14 +7,14 @@ classdef xIMUdataClass < handle
         CommandData = [];
         RegisterData = [];
         DateTimeData = [];
-        RawBattThermData = [];
-        CalBattThermData = [];
-        RawInertialMagneticData = [];
-        CalInertialMagneticData = [];
+        RawBatteryAndThermometerData = [];
+        CalBatteryAndThermometerData = [];
+        RawInertialAndMagneticData = [];
+        CalInertialAndMagneticData = [];
         QuaternionData = [];
         RotationMatrixData = [];
         EulerAnglesData = [];
-        DigitalIOData = [];
+        DigitalIOdata = [];
         RawAnalogueInputData = [];
         CalAnalogueInputData = [];
         PWMoutputData = [];        
@@ -32,14 +32,14 @@ classdef xIMUdataClass < handle
             try obj.CommandData = CommandDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.RegisterData = RegisterDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.DateTimeData = DateTimeDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
-            try obj.RawBattThermData = RawBattThermDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
-            try obj.CalBattThermData = CalBattThermDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
-            try obj.RawInertialMagneticData = RawInertialMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
-            try obj.CalInertialMagneticData = CalInertialMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawBatteryAndThermometerData = RawBatteryAndThermometerDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalBatteryAndThermometerData = CalBatteryAndThermometerDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawInertialAndMagneticData = RawInertialAndMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalInertialAndMagneticData = CalInertialAndMagneticDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.QuaternionData = QuaternionDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.EulerAnglesData = EulerAnglesDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.RotationMatrixData = RotationMatrixDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
-            try obj.DigitalIOData = DigitalIODataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.DigitalIOdata = DigitalIOdataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.RawAnalogueInputData = RawAnalogueInputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.CalAnalogueInputData = CalAnalogueInputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.PWMoutputData = PWMoutputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
@@ -51,14 +51,14 @@ classdef xIMUdataClass < handle
 
             % Apply SampleRate from register data
             try h = obj.DateTimeData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(67)); catch e, end
-            try h = obj.RawBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
-            try h = obj.CalBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
-            try h = obj.RawInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
-            try h = obj.CalInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
+            try h = obj.RawBatteryAndThermometerData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
+            try h = obj.CalBatteryAndThermometerData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
+            try h = obj.RawInertialAndMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
+            try h = obj.CalInertialAndMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
             try h = obj.QuaternionData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
             try h = obj.RotationMatrixData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
             try h = obj.EulerAnglesData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
-            try h = obj.DigitalIOData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(78)); catch e, end
+            try h = obj.DigitalIOdata; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(78)); catch e, end
             try h = obj.RawAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
             try h = obj.CalAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
             try h = obj.PWMoutputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(83)); catch e, end
@@ -70,17 +70,17 @@ classdef xIMUdataClass < handle
                 if strcmp(varargin{i}, 'DateTimeSampleRate')
                     try h = obj.DateTimeData; h.SampleRate = varargin{i+1}; catch e, end                
                     elseif strcmp(varargin{i}, 'BattThermSampleRate')
-                    try h = obj.RawBattThermData; h.SampleRate = varargin{i+1}; catch e, end
-                    try h = obj.CalBattThermData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.RawBatteryAndThermometerData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalBatteryAndThermometerData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'InertialMagneticSampleRate')
-                    try h = obj.RawInertialMagneticData; h.SampleRate = varargin{i+1}; catch e, end
-                    try h = obj.CalInertialMagneticData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.RawInertialAndMagneticData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalInertialAndMagneticData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'QuaternionSampleRate')
                     try h = obj.QuaternionData; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.RotationMatrixData.SampleRate; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.EulerAnglesData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'DigitalIOSampleRate')
-                    try h = obj.DigitalIOData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.DigitalIOdata; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'AnalogueInputSampleRate')
                     try h = obj.RawAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.CalAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end                    
@@ -93,14 +93,14 @@ classdef xIMUdataClass < handle
             end
         end
         function obj = Plot(obj)
-            try obj.RawBattThermData.Plot(); catch e, end
-            try obj.CalBattThermData.Plot(); catch e, end
-            try obj.RawInertialMagneticData.Plot(); catch e, end
-            try obj.CalInertialMagneticData.Plot(); catch e, end
+            try obj.RawBatteryAndThermometerData.Plot(); catch e, end
+            try obj.CalBatteryAndThermometerData.Plot(); catch e, end
+            try obj.RawInertialAndMagneticData.Plot(); catch e, end
+            try obj.CalInertialAndMagneticData.Plot(); catch e, end
             try obj.QuaternionData.Plot(); catch e, end
             try obj.EulerAnglesData.Plot(); catch e, end
             try obj.RotationMatrixDataClass.Plot(); catch e, end
-            try obj.DigitalIOData.Plot(); catch e, end
+            try obj.DigitalIOdata.Plot(); catch e, end
             try obj.RawAnalogueInputData.Plot(); catch e, end
             try obj.CalAnalogueInputData.Plot(); catch e, end            
             try obj.RawADXL345busData.Plot(); catch e, end
