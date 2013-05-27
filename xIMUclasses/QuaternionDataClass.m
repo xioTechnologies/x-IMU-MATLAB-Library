@@ -16,7 +16,7 @@ classdef QuaternionDataClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 1);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
             obj.Quaternion = data(:,1:4);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector
         end

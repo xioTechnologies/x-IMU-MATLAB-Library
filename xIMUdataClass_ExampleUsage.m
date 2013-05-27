@@ -1,5 +1,5 @@
 %% xIMUdataClass_ExampleUsage.m
-% MATLAB x-IMU Library Version 3.2
+% MATLAB x-IMU Library Version 4.0
 
 addpath('xIMUclasses');     % include class library
 close all;                  % close all figures

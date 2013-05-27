@@ -23,7 +23,7 @@ classdef BattThermDataBaseClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 1);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
             obj.Battery = data(:,1);
             obj.Thermometer = data(:,2);
             obj.SampleRate = obj.SampleRate;    % call set method to create time vector

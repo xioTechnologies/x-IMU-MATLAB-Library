@@ -24,7 +24,7 @@ classdef InertialMagneticDataBaseClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 1);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
             obj.Gyroscope.X = data(:,1);
             obj.Gyroscope.Y = data(:,2);
             obj.Gyroscope.Z = data(:,3);

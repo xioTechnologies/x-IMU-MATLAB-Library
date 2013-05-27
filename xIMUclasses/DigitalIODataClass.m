@@ -23,7 +23,7 @@ classdef DigitalIODataClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 9);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 10);
             obj.AX0 = data(:,1);
             obj.AX1 = data(:,2);
             obj.AX2 = data(:,3);

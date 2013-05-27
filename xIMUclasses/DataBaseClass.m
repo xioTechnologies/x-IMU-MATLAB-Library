@@ -11,6 +11,7 @@ classdef DataBaseClass < handle
     properties (SetAccess = private)
         NumSamples = 0;
         Time = [];
+        SamplePeriod;
     end
 
     %% Abstract public 'read-only properties
@@ -37,6 +38,13 @@ classdef DataBaseClass < handle
                 obj.Time = (0:obj.NumSamples-1)' * (1/obj.SampleRate);
             end
         end
+        function samplePeriod = get.SamplePeriod(obj)
+            if(obj.SampleRate == 0)
+                Error('Sample period is unknown');
+            elseif(obj.NumSamples ~= 0)
+                samplePeriod = 1 / obj.SampleRate;
+            end
+        end        
     end
 
     %% Private methods

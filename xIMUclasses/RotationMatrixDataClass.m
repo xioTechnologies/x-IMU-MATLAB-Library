@@ -16,7 +16,7 @@ classdef RotationMatrixDataClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 1);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
             obj.RotationMatrix = zeros(3, 3, obj.NumSamples);
             obj.RotationMatrix(1,1,:) = data(:,1);
             obj.RotationMatrix(1,2,:) = data(:,2);

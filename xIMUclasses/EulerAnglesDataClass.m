@@ -18,7 +18,7 @@ classdef EulerAnglesDataClass < DataBaseClass
 
     methods (Access = public)
         function obj = Import(obj, fileNamePrefix)
-            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 1);
+            data = obj.ImportCSV(strcat(fileNamePrefix, obj.FileNameAppendage), 2);
             obj.Phi = data(:,1);
             obj.Theta = data(:,2);
             obj.Psi = data(:,3);
