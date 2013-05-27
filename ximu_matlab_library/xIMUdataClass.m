@@ -15,6 +15,11 @@ classdef xIMUdataClass < handle
         RotationMatrixData = [];
         EulerAnglesData = [];
         DigitalIOData = [];
+        RawAnalogueInputData = [];
+        CalAnalogueInputData = [];
+        PWMoutputData = [];        
+        RawADXL345busData = [];
+        CalADXL345busData = [];
     end
 
     %% Public methods
@@ -35,23 +40,36 @@ classdef xIMUdataClass < handle
             try obj.EulerAnglesData = EulerAnglesDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.RotationMatrixData = RotationMatrixDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             try obj.DigitalIOData = DigitalIODataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawAnalogueInputData = RawAnalogueInputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalAnalogueInputData = CalAnalogueInputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.PWMoutputData = PWMoutputDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.RawADXL345busData = RawADXL345busDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
+            try obj.CalADXL345busData = CalADXL345busDataClass(obj.FileNamePrefix); dataImported = true; catch e, end
             if(~dataImported)
                 error('No data was imported.');
             end
 
-            % Apply SampleRate from regsiter data
-            try h = obj.RawBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(53)); catch e, end
-            try h = obj.CalBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(53)); catch e, end
-            try h = obj.RawInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(54)); catch e, end
-            try h = obj.CalInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(54)); catch e, end
-            try h = obj.QuaternionData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
-            try h = obj.RotationMatrixData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
-            try h = obj.EulerAnglesData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(55)); catch e, end
-            try h = obj.DigitalIOData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(63)); catch e, end
+            % Apply SampleRate from register data
+            try h = obj.DateTimeData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(67)); catch e, end
+            try h = obj.RawBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
+            try h = obj.CalBattThermData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(68)); catch e, end
+            try h = obj.RawInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
+            try h = obj.CalInertialMagneticData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(69)); catch e, end
+            try h = obj.QuaternionData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
+            try h = obj.RotationMatrixData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
+            try h = obj.EulerAnglesData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(70)); catch e, end
+            try h = obj.DigitalIOData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(78)); catch e, end
+            try h = obj.RawAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
+            try h = obj.CalAnalogueInputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(80)); catch e, end
+            try h = obj.PWMoutputData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(83)); catch e, end
+            try h = obj.RawADXL345busData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(85)); catch e, end
+            try h = obj.CalADXL345busData; h.SampleRate = obj.SampleRateFromRegValue(obj.RegisterData.GetValueAtAddress(85)); catch e, end
 
-            % Appply SampleRate if sepecifed as argument
+            % Apply SampleRate if specified as argument
             for i = 2:2:(nargin)
-                if strcmp(varargin{i}, 'BattThermSampleRate')
+                if strcmp(varargin{i}, 'DateTimeSampleRate')
+                    try h = obj.DateTimeData; h.SampleRate = varargin{i+1}; catch e, end                
+                    elseif strcmp(varargin{i}, 'BattThermSampleRate')
                     try h = obj.RawBattThermData; h.SampleRate = varargin{i+1}; catch e, end
                     try h = obj.CalBattThermData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'InertialMagneticSampleRate')
@@ -63,6 +81,12 @@ classdef xIMUdataClass < handle
                     try h = obj.EulerAnglesData; h.SampleRate = varargin{i+1}; catch e, end
                 elseif strcmp(varargin{i}, 'DigitalIOSampleRate')
                     try h = obj.DigitalIOData; h.SampleRate = varargin{i+1}; catch e, end
+                elseif strcmp(varargin{i}, 'AnalogueInputSampleRate')
+                    try h = obj.RawAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalAnalogueInputData; h.SampleRate = varargin{i+1}; catch e, end                    
+                elseif strcmp(varargin{i}, 'ADXL345SampleRate')
+                    try h = obj.RawADXL345busData; h.SampleRate = varargin{i+1}; catch e, end
+                    try h = obj.CalADXL345busData; h.SampleRate = varargin{i+1}; catch e, end
                 else
                     error('Invalid argument.');
                 end
@@ -77,9 +101,13 @@ classdef xIMUdataClass < handle
             try obj.EulerAnglesData.Plot(); catch e, end
             try obj.RotationMatrixDataClass.Plot(); catch e, end
             try obj.DigitalIOData.Plot(); catch e, end
+            try obj.RawAnalogueInputData.Plot(); catch e, end
+            try obj.CalAnalogueInputData.Plot(); catch e, end            
+            try obj.RawADXL345busData.Plot(); catch e, end
+            try obj.CalADXL345busData.Plot(); catch e, end
         end
     end
-    
+
     %% Private methods
     methods (Access = private)
         function sampleRate = SampleRateFromRegValue(obj, value)

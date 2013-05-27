@@ -1,4 +1,4 @@
-classdef DateTimeDataClass < DataBaseClass
+classdef DateTimeDataClass < TimeSeriesDataBaseClass
 
     %% Public 'read-only' properties
     properties (SetAccess = private)
@@ -10,7 +10,13 @@ classdef DateTimeDataClass < DataBaseClass
 
     %% Public methods
     methods (Access = public)
-        function obj = DateTimeDataClass(fileNamePrefix)
+        function obj = DateTimeDataClass(varargin)
+            fileNamePrefix = varargin{1};
+            for i = 2:2:nargin
+                if  strcmp(varargin{i}, 'SampleRate'), obj.SampleRate = varargin{i+1};
+                else error('Invalid argument.');
+                end
+            end              
             data = obj.ImportCSVmixed(fileNamePrefix, '%d %s');
             obj.Vector = zeros(obj.NumPackets, 6);
             for i = 1:obj.NumPackets
@@ -18,7 +24,11 @@ classdef DateTimeDataClass < DataBaseClass
             end
             obj.String = cellstr(datestr(obj.Vector));
             obj.Serial = datenum(obj.Vector);
+            obj.SampleRate = obj.SampleRate;	% call set method to create time vector
         end
+        function obj = Plot(obj)
+            error('This method is unimplemented.');
+        end        
     end
 
     %% Private methods

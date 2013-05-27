@@ -70,7 +70,7 @@ Packet Number,Address,Value,Float Value,Name
 69,68,3,3,BattThermOutputRate
 70,69,9,9,InertialMagOutputRate
 71,70,8,8,QuatOutputRate
-72,71,11,11,SDcardNewFileName
+72,71,14,14,SDcardNewFileName
 73,72,14336,3.5,BattShutdownVoltage
 74,73,0,0,SleepTimer
 75,74,0,0,MotionTrigWakeUp
