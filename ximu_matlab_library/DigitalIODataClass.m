@@ -1,4 +1,4 @@
-classdef DigitalIOdataClass < TimeSeriesDataBaseClass
+classdef DigitalIODataClass < TimeSeriesDataBaseClass
 
     %% Public 'read-only' properties
     properties (SetAccess = private)
